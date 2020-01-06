@@ -7,9 +7,9 @@
 //
 
 #include "state.h"
-#include "utils.h"
-#include "alloc.h"
-#include "debug_log.h"
+#include "../base/utils.h"
+#include "../base/alloc.h"
+#include "../base/debug_log.h"
 #include <memory.h>
 
 struct state {
@@ -153,35 +153,35 @@ state_fitness (state *state)
 }
 
 static state *
-move_swap (state *state, int idx1, int idx2)
+move_swap (state *s, int idx1, int idx2)
 {
-    state *new = state_init_copy (state);
+    state *new_state = state_init_copy (s);
 
-    XORSWAP (new->solution[idx1], new->solution[idx2]);
+    XORSWAP (new_state->solution[idx1], new_state->solution[idx2]);
 
-    state_update_fitness (new);
+    state_update_fitness (new_state);
 
-    return new;
+    return new_state;
 }
 
 static state *
-move_two_opt (state *state, int idx1, int idx2)
+move_two_opt (state *st, int idx1, int idx2)
 {
     state *new = state_init (NONE);
 
     int s = min(idx1, idx2);
     int e = max(idx1, idx2);
 
-    memmove(new->solution, state->solution, sizeof(int) * s);
+    memmove(new->solution, st->solution, sizeof(int) * s);
 
     int aux = 0;
 
     for (int i = s; i <= e; i++) {
-        new->solution[i] = state->solution[e - aux];
+        new->solution[i] = st->solution[e - aux];
         aux += 1;
     }
 
-    memmove((new->solution + e + 1), (state->solution + e + 1), sizeof(int) * (state->n - (e + 1)));
+    memmove((new->solution + e + 1), (st->solution + e + 1), sizeof(int) * (st->n - (e + 1)));
 
     state_update_fitness (new);
 

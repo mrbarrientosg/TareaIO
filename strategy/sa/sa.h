@@ -9,8 +9,8 @@
 #ifndef sa_h
 #define sa_h
 
-#include "strategy.h"
-#include "config.h"
+#include "../strategy.h"
+#include "../../base/config.h"
 
 typedef strategy sa;
 

@@ -8,9 +8,9 @@
 
 #include <stdio.h>
 #include <time.h>
-#include "SRFLP.h"
-#include "utils.h"
-#include "sa.h"
+#include "core/SRFLP.h"
+#include "base/utils.h"
+#include "strategy/sa/sa.h"
 
 #define INSTANCE "/Users/matiasbarrientos/Downloads/Instancias Single Row Facility Layout Problem-20200102/QAP_sko56_04_n"
 

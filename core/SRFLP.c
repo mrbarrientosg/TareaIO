@@ -7,9 +7,9 @@
 //
 
 #include "SRFLP.h"
-#include "alloc.h"
-#include "debug_log.h"
-#include "utils.h"
+#include "../base/alloc.h"
+#include "../base/debug_log.h"
+#include "../base/utils.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -55,7 +55,7 @@ read_srflp (SRFLP *srflp, const char *filename)
             srflp->n = atoi(line);
             ASSERT ((ALLOC_N (srflp->f_size, srflp->n) != -1), "No hay memoria para asignar.");
             ASSERT ((ALLOC_N (srflp->f_weight, srflp->n) != -1), "No hay memoria para asignar.");
-            
+
             for (int  k = 0; k < srflp->n; k++) {
                 ALLOC_N (srflp->f_weight[k], srflp->n);
             }
@@ -91,7 +91,7 @@ SRFLP *
 srflp_init (const char *filename)
 {
     SRFLP *srflp = NULL;
-    
+
     if (ALLOC (srflp) == -1)
         FATAL_ERROR ("No hay memoria para asignar al objeto SRFLP.");
 
@@ -101,7 +101,7 @@ srflp_init (const char *filename)
     srflp->name = strdup(filename);
 
     read_srflp (srflp, filename);
-        
+
     return srflp;
 }
 

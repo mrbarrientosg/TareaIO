@@ -13,8 +13,8 @@ typedef const struct strategy_implementation strategy_implementation;
 
 typedef struct strategy strategy;
 
-#include "state.h"
-#include "SRFLP.h"
+#include "../core/state.h"
+#include "../core/SRFLP.h"
 
 struct strategy_implementation {
     const state *(*solve)(strategy *strategy);

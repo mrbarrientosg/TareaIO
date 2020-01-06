@@ -10,9 +10,9 @@
 #endif
 
 #include "sa.h"
-#include "alloc.h"
-#include "debug_log.h"
-#include "utils.h"
+#include "../../base/alloc.h"
+#include "../../base/debug_log.h"
+#include "../../base/utils.h"
 
 #include <math.h>
 
