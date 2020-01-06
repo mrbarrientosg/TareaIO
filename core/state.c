@@ -1,27 +1,33 @@
 //
-//  State.c
+//  state.c
 //  TareaIO
 //
 //  Created by Matias Barrientos on 02-01-20.
 //  Copyright © 2020 Matias Barrientos. All rights reserved.
 //
 
-#include "State.h"
+#include "state.h"
 #include "utils.h"
 #include "alloc.h"
 #include "debug_log.h"
 #include <memory.h>
 
+struct state {
+    int n;
+    double fitness;
+    int *solution;
+};
+
 static void
-initial_solution_greedy (State *state)
+initial_solution_greedy (state *state)
 {
     int utilized = 0;
     int aux;
     int *ps, *pe, *pp = malloc(sizeof(int) * 2);
     //int gsize = 2;
     int *selected = NULL;
-    ALLOC_N(selected, state->n);
-    memset(selected, 0, sizeof(int) * state->n);
+    ALLOC_N (selected, state->n);
+    memset (selected, 0, sizeof(int) * state->n);
 
     while (utilized < state->n) {
 
@@ -34,8 +40,8 @@ initial_solution_greedy (State *state)
                 continue;
 
             for (int j = 0; j < i; j++) {
-                if (selected[j] == 0 && srflp_weight(state->srflp, i, j) >= aux) {
-                    aux = srflp_weight(state->srflp, i, j);
+                if (selected[j] == 0 && srflp_weight(srflp, i, j) >= aux) {
+                    aux = srflp_weight(srflp, i, j);
                     *ps = i;
                     *pe = j;
                 }
@@ -100,22 +106,20 @@ initial_solution_greedy (State *state)
 }
 
 static void
-initial_solution_deterministic (State *state) {
+initial_solution_deterministic (state *state) {
     for (int i = 0; i < state->n; i++) {
         state->solution[i] = i;
     }
 }
 
-
-State *
-state_init (SRFLP * srflp, InitialSolution initial)
+state *
+state_init (initial_solution initial)
 {
-    State *state = NULL;
+    state *state = NULL;
 
     if (ALLOC (state) == -1)
         FATAL_ERROR ("No hay memoria para reservar el objeto State.");
 
-    state->srflp = srflp;
     state->n = srflp_problem_size (srflp);
     ALLOC_N (state->solution, state->n);
 
@@ -133,19 +137,25 @@ state_init (SRFLP * srflp, InitialSolution initial)
     return state;
 }
 
-State *
-state_init_copy (State *other)
+state *
+state_init_copy (state *other)
 {
-    State *new = state_init (other->srflp, NONE);
+    state *new = state_init (NONE);
     new->fitness = other->fitness;
     memmove (new->solution, other->solution, sizeof(int) * other->n);
     return new;
 }
 
-static State *
-move_swap (State *state, int idx1, int idx2)
+double
+state_fitness (state *state)
 {
-    State *new = state_init_copy (state);
+    return state->fitness;
+}
+
+static state *
+move_swap (state *state, int idx1, int idx2)
+{
+    state *new = state_init_copy (state);
 
     XORSWAP (new->solution[idx1], new->solution[idx2]);
 
@@ -154,10 +164,10 @@ move_swap (State *state, int idx1, int idx2)
     return new;
 }
 
-static State *
-move_two_opt (State *state, int idx1, int idx2)
+static state *
+move_two_opt (state *state, int idx1, int idx2)
 {
-    State *new = state_init (state->srflp, NONE);
+    state *new = state_init (NONE);
 
     int s = min(idx1, idx2);
     int e = max(idx1, idx2);
@@ -178,8 +188,8 @@ move_two_opt (State *state, int idx1, int idx2)
     return new;
 }
 
-State *
-state_random_neighbour (State *state, MoveType move)
+state *
+state_random_neighbour (state *state, move_type move)
 {
     int idx1, idx2;
 
@@ -197,7 +207,7 @@ state_random_neighbour (State *state, MoveType move)
 }
 
 void
-state_update_fitness (State *state)
+state_update_fitness (state *state)
 {
     double total = 0.0;
     double middle_distance;
@@ -210,8 +220,8 @@ state_update_fitness (State *state)
         middle_distance = 0.0;
         for (int j = (i + 1); j < state->n; j++) {
             p2 = state->solution[j];
-            total += (srflp_facility_size(state->srflp, p1)/2.0 + middle_distance + srflp_facility_size(state->srflp, p2)/2.0) * srflp_weight(state->srflp, p1, p2);
-            middle_distance += srflp_facility_size(state->srflp, p2);
+            total += (srflp_facility_size(srflp, p1)/2.0 + middle_distance + srflp_facility_size(srflp, p2)/2.0) * srflp_weight(srflp, p1, p2);
+            middle_distance += srflp_facility_size(srflp, p2);
         }
     }
 
@@ -219,7 +229,7 @@ state_update_fitness (State *state)
 }
 
 void
-state_print (State *state)
+state_print (const state *state)
 {
     puts ("Solucion: ");
     for (int i = 0; i < state->n; i++) {
@@ -229,10 +239,11 @@ state_print (State *state)
 }
 
 void
-state_free (State **state)
+state_free (state **state)
 {
     FREE ((*state)->solution);
     FREE (*state);
     *state = NULL;
 }
+
 

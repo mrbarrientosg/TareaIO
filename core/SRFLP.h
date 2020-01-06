@@ -11,7 +11,7 @@
 
 typedef struct SRFLP SRFLP;
 
-#include "State.h"
+extern SRFLP *srflp;
 
 SRFLP *srflp_init (const char *filename);
 

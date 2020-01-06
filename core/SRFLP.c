@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include <string.h>
 
+SRFLP *srflp = NULL;
+
 struct SRFLP {
     int n;
     int *f_size;
