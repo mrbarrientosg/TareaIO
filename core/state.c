@@ -239,11 +239,19 @@ state_print (const state *state)
 }
 
 void
-state_free (state **state)
+state_free (state *state)
 {
-    FREE ((*state)->solution);
-    FREE (*state);
-    *state = NULL;
+    FREE (state->solution);
+    FREE (state);
 }
 
+int
+state_equals (const state *s1, const state *s2) {
+    for (int i = 0; i < s1->n; i++) {
+        if (s1->solution[i] != s2->solution[i])
+            return 0;
+    }
+
+    return 1;
+}
 

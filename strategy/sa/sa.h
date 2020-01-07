@@ -36,8 +36,6 @@ struct sa_implementation {
     void (*setup) (sa *sa, double initial_temperature, double min_temperature, initial_solution init_solution);
 };
 
-extern const sa_implementation sa_strategy_implementation;
-
 INLINE sa *
 sa_init (sa_implementation *implementation,
          cooling_type cooling, move_type move, double alpha) {

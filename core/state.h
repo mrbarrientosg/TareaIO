@@ -40,6 +40,8 @@ double state_fitness (state *state);
 
 void state_print (const state *state);
 
-void state_free (state **state);
+int state_equals (const state *s1, const state *s2);
+
+void state_free (state *state);
 
 #endif /* state_h */
