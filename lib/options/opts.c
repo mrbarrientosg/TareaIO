@@ -6,14 +6,14 @@
 //  Copyright © 2020 Matias Barrientos. All rights reserved.
 //
 
-#include "opts.h"
+#include "../../include/options/opts.h"
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "../base/debug_log.h"
-#include "../base/alloc.h"
-#include "../base/utils.h"
-#include "../base/map.h"
+#include "../../include/base/debug_log.h"
+#include "../../include/base/alloc.h"
+#include "../../include/base/utils.h"
+#include "../../include/base/map.h"
 
 options *opts = NULL;
 
@@ -175,9 +175,15 @@ options_init (int argc, const char * argv[]) {
         if (strstr(argv[idx], "--")) {
             aux = _options_init (NULL, NULL, argv[idx], 0, NULL);
             search = map_search_key (options->long_names, aux);
-        } else {
+        } else if (strstr(argv[idx], "-")) {
             aux = _options_init (NULL, argv[idx], NULL, 0, NULL);
             search = map_search_key (options->short_names, aux);
+        } else {
+            ERROR ("El parametro ingresado no existe.");
+        }
+
+        if (search == NULL) {
+            ERROR ("El parametro ingresado no existe.");
         }
 
         if (!strcmp (search->name, "instanceFile")) {

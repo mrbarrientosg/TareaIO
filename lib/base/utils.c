@@ -1,7 +1,7 @@
 #define INLINE
-#include "utils.h"
-#include "alloc.h"
-#include "debug_log.h"
+#include "../../include/base/utils.h"
+#include "../../include/base/alloc.h"
+#include "../../include/base/debug_log.h"
 #include <string.h>
 #include <stdarg.h>
 
